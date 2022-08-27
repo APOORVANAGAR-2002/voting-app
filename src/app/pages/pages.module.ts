@@ -7,6 +7,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 const routes: Routes = [
   {
@@ -15,23 +17,30 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: VotingsListComponent
+        component: VotingsListComponent,
       },
       {
         path: 'settings',
-        component: SettingsComponent
+        component: SettingsComponent,
       },
       {
         path: ':id',
-        component: VotingsDetailsComponent
+        component: VotingsDetailsComponent,
       },
-    ]
+    ],
   },
 ];
 
 @NgModule({
-  declarations: [VotingsListComponent, VotingsDetailsComponent, UiComponent, FooterComponent, HeaderComponent, SettingsComponent],
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  declarations: [
+    VotingsListComponent,
+    VotingsDetailsComponent,
+    UiComponent,
+    FooterComponent,
+    HeaderComponent,
+    SettingsComponent,
+  ],
+  imports: [CommonModule, RouterModule.forChild(routes),ReactiveFormsModule, SweetAlert2Module.forRoot()],
   exports: [RouterModule],
 })
 export class PagesModule {}

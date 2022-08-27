@@ -1,1 +1,195 @@
-<p>votings-details works!</p>
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-gray-100">
+  <div class="mt-10 sm:mt-0">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div class="md:col-span-1">
+        <div class="px-4 sm:px-0">
+          <h3 class="text-lg font-medium leading-6 text-gray-900">
+            Voting Information
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Set up your voting information here
+          </p>
+        </div>
+      </div>
+      <div class="mt-5 md:mt-0 md:col-span-2">
+        <form (ngSubmit)="updateVoting()" [formGroup]="form">
+          <div class="shadow overflow-hidden sm:rounded-md">
+            <div class="px-4 py-5 bg-white sm:p-6">
+              <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-6 sm:col-span-6">
+                  <label
+                    for="Title"
+                    class="block text-sm font-medium text-gray-700"
+                    >Title</label
+                  >
+                  <input
+                    formControlName="title"
+                    type="text"
+                    name="title"
+                    id="title"
+                    autocomplete="given-name"
+                    class="mt-1 p-2 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+
+                <br />
+                <div class="col-span-6 sm:col-span-6">
+                  <label
+                    for="Votinf question"
+                    class="block text-sm font-medium text-gray-700"
+                    >Voting question</label
+                  >
+                  <input
+                    formControlName="voting_question"
+                    type="text"
+                    name="voting-question"
+                    id="voting-question"
+                    autocomplete="given-name"
+                    class="mt-1 p-2 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+
+                <br />
+                <div class="col-span-6 sm:col-span-6">
+                  <label
+                    for="public"
+                    class="block text-sm font-medium text-gray-700"
+                    >Public visible?</label
+                  >
+                  <select
+                    formControlName="public"
+                    id="public"
+                    name="public"
+                    autocomplete="country-name"
+                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option [value]="true">public</option>
+                    <option [value]="false">private</option>
+                  </select>
+                </div>
+
+                <div class="col-span-12">
+                  <label
+                    for="description"
+                    class="block text-sm font-medium text-gray-700"
+                    >Description</label
+                  >
+                  <textarea
+                    formControlName="description"
+                    type="text-area"
+                    name="street-address"
+                    id="street-address"
+                    autocomplete="street-address"
+                    class="mt-1 border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <button
+                type="button"
+                [swal]="{
+                  title: 'Do you really want to delete this voting?',
+                  text: 'This cannot be undone!',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+                }"
+                (confirm)="deleteVoting()"
+                class="inline-flex justify-center py-2 px-4 mx-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Delete
+              </button>
+              <button
+                (click)="updateVoting()"
+                type="submit"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden sm:block" aria-hidden="true">
+    <div class="py-5">
+      <div class="border-t border-gray-300"></div>
+      <div class="border-t my-2 border-gray-300"></div>
+    </div>
+  </div>
+
+  <div class="mt-10 sm:mt-0">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div class="md:col-span-1">
+        <div class="px-4 sm:px-0">
+          <h3 class="text-lg font-medium leading-6 text-gray-900">
+            Voting Options
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            Define your voting options here
+          </p>
+        </div>
+      </div>
+      <div class="mt-5 md:mt-0 md:col-span-2">
+        <div class="shadow overflow-hidden sm:rounded-md">
+          <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+            <form [formGroup]="formOptions" class="flex flex-col">
+              <div formArrayName="options">
+                <div *ngIf="!options.controls.length">
+                  Add your voting options
+                </div>
+                <div>
+                  <div class="flex mb-2">
+                    <input
+                      formControlName="title"
+                      type="text"
+                      placeholder="Answer"
+                      class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex items-center px-2.5 ml-4 py-0.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <button
+              class="inline-flex items-center px-4 py-2 mr-4 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Add Option
+            </button>
+
+            <button
+              class="inline-flex disabled:bg-indigo-200 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

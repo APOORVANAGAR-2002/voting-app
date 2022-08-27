@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class VotingsListComponent implements OnInit {
 
   votings: any[] = [];
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadVotings(); 
@@ -21,8 +22,12 @@ export class VotingsListComponent implements OnInit {
   }
 
   async startVoting() {
-    const data = await this.dataService.startVoting();
-    console.log(data);
+    const result = await this.dataService.startVoting();
+    console.log(result);
+
+    if (!result.error && result.data.length) {
+      this.router.navigate([`/app/${result.data[0].id}`])
+    }
   }
 
 }
