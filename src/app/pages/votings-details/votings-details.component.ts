@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { zip } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -37,9 +38,21 @@ export class VotingsDetailsComponent implements OnInit {
       this.voting = await (await this.dataService.getVotingDetails(+id)).data;
       console.log(this.voting);
 
+      const options = await (await this.dataService.getVotingOptions(+id)).data;
+      console.log("options", options);
+      
+      options?.map((item) => {
+        const option = this.fb.group({
+          title: [item.title, Validators.required],
+          id: item.id,
+        });
+        this.options.push(option);
+        console.log("options new", options);
+        
+      });
+
       this.form.patchValue(this.voting);
     }
-    // console.log("Form option", this.formOptions);
   }
 
   async updateVoting() {
@@ -62,6 +75,7 @@ export class VotingsDetailsComponent implements OnInit {
     this.router.navigate(['/app']);
   }
 
+  // Voting options
   get options(): FormArray {
     // console.log(this.formOptions.controls['options'] as FormArray);
 
@@ -72,15 +86,40 @@ export class VotingsDetailsComponent implements OnInit {
     const option = this.fb.group({
       title: ['', Validators.required],
       id: null,
+      voting_id: this.voting.id
     });
     this.options.push(option);
   }
 
-  deleteOption(index: number) {
-    this.options.removeAt(index);
+  async deleteOption(index: number) {
+    const control = this.options.at(index);
+    const id = control.value.id;
+    const res = await this.dataService.deleteVotingOption(id);
+    console.log(res);
+    if (res) {
+      this.options.removeAt(index);
+    }
   }
 
   saveOptions() {
     console.log('SAVE', this.formOptions.value);
+    const obs = [];
+    for (let entry of this.formOptions.value.options) {
+      if (!entry.id) {
+        console.log('ADD THIS', entry);
+        const newObs = this.dataService.addVotingOption(entry);
+        // console.log("New obs", newObs);
+        obs.push(newObs);
+        // console.log("Obs", obs);
+      } else {
+        // To update the answer
+        const newObs = this.dataService.updateVotingOption(entry);
+        obs.push(newObs);
+      }
+    }
+    zip(obs).subscribe(res => {
+      console.log('AFTER ADD: ', res);
+      alert('Success!');
+    })
   }
 }
