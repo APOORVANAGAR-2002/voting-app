@@ -40,7 +40,12 @@ const routes: Routes = [
     HeaderComponent,
     SettingsComponent,
   ],
-  imports: [CommonModule, RouterModule.forChild(routes),ReactiveFormsModule, SweetAlert2Module.forRoot()],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    SweetAlert2Module.forRoot(),
+  ],
   exports: [RouterModule],
 })
 export class PagesModule {}

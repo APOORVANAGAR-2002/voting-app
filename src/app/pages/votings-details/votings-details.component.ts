@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { zip } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-votings-details',
@@ -18,7 +19,8 @@ export class VotingsDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
     this.form = this.fb.group({
       voting_question: ['', Validators.required],
@@ -65,13 +67,15 @@ export class VotingsDetailsComponent implements OnInit {
     console.log(res);
 
     if (res.data) {
-      alert('Voting updated!');
+      this.toastr.success('Voting updated!');
+      // alert('Voting updated!');
     }
   }
 
   async deleteVoting() {
     await this.dataService.deleteVoting(this.voting.id);
-    alert('Voting deleted!');
+    this.toastr.success('Voting deleted!');
+    // alert('Voting deleted!');
     this.router.navigate(['/app']);
   }
 
@@ -108,18 +112,17 @@ export class VotingsDetailsComponent implements OnInit {
       if (!entry.id) {
         console.log('ADD THIS', entry);
         const newObs = this.dataService.addVotingOption(entry);
-        // console.log("New obs", newObs);
         obs.push(newObs);
-        // console.log("Obs", obs);
       } else {
         // To update the answer
         const newObs = this.dataService.updateVotingOption(entry);
         obs.push(newObs);
       }
     }
-    zip(obs).subscribe(res => {
+    zip(obs).subscribe((res) => {
       console.log('AFTER ADD: ', res);
-      alert('Success!');
+      this.toastr.success('Voting updated!');
+      // alert('Success!');
     })
   }
 }

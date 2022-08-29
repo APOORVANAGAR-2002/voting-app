@@ -73,8 +73,8 @@ export class DataService {
     // setting the creator_id to current user_id
     option.creator_id = this.supabase.auth.user()?.id;
     option.votes = 0;
-
     delete option.id;
+
     return this.supabase.from(TABLE_VOTING_OPTIONS).insert(option);
   }
 
@@ -82,11 +82,15 @@ export class DataService {
     return this.supabase
       .from(TABLE_VOTING_OPTIONS)
       .update({ title: option.title })
-      .eq('id', option.id);
+      .eq('id', option.id)
+      .single();
   }
 
   async deleteVotingOption(id: number) {
-    return this.supabase.from(TABLE_VOTING_OPTIONS).delete().eq('id', id).single();
+    return this.supabase
+      .from(TABLE_VOTING_OPTIONS)
+      .delete()
+      .eq('id', id)
+      .single();
   }
-
 }
